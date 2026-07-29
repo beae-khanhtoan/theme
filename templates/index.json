@@ -1,0 +1,41 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "minimal_slideshow": {
+      "type": "minimal-slideshow",
+      "settings": {},
+      "blocks": {
+        "slide_one": {
+          "type": "slide",
+          "settings": {}
+        },
+        "slide_two": {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "Made to move",
+            "heading": "The joy is in the everyday",
+            "text": "<p>Thoughtful essentials designed to grow alongside them.</p>",
+            "text_alignment": "center"
+          }
+        }
+      },
+      "block_order": ["slide_one", "slide_two"]
+    },
+    "main": {
+      "type": "kids-story-home",
+      "settings": {}
+    }
+  },
+  "order": [
+    "minimal_slideshow",
+    "main"
+  ]
+}

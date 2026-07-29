@@ -1,0 +1,371 @@
+{% liquid
+  assign featured_collection = section.settings.featured_collection
+  assign product_limit = section.settings.product_limit
+%}
+
+<section
+  class="kids-home color-{{ section.settings.color_scheme }}"
+  style="--section-top: {{ section.settings.padding_top }}px; --section-bottom: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="kids-home__hero">
+    <div class="kids-home__hero-copy">
+      {% if section.settings.eyebrow != blank %}
+        <p class="kids-home__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      <h1>{{ section.settings.heading }}</h1>
+
+      {% if section.settings.text != blank %}
+        <div class="kids-home__intro">{{ section.settings.text }}</div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+        <a class="kids-home__button" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>
+      {% endif %}
+    </div>
+
+    <div class="kids-home__hero-art">
+      {% if section.settings.hero_image != blank %}
+        {{ section.settings.hero_image | image_url: width: 1800 | image_tag: class: 'kids-home__hero-image', widths: '480, 720, 1080, 1440, 1800', sizes: '(min-width: 990px) 52vw, 100vw', loading: 'eager' }}
+      {% else %}
+        <div class="kids-home__placeholder" aria-hidden="true">
+          <span class="kids-home__sun"></span>
+          <span class="kids-home__cloud kids-home__cloud--one"></span>
+          <span class="kids-home__cloud kids-home__cloud--two"></span>
+          <span class="kids-home__hill kids-home__hill--one"></span>
+          <span class="kids-home__hill kids-home__hill--two"></span>
+        </div>
+      {% endif %}
+
+      {% if section.settings.hero_caption != blank %}
+        <p class="kids-home__caption">{{ section.settings.hero_caption }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if section.blocks.size > 0 %}
+    <div class="kids-home__stories">
+      {% for block in section.blocks %}
+        <article class="kids-home__story" {{ block.shopify_attributes }}>
+          {% if block.settings.image != blank %}
+            {{ block.settings.image | image_url: width: 960 | image_tag: class: 'kids-home__story-image', widths: '360, 540, 720, 960', sizes: '(min-width: 990px) 33vw, 85vw' }}
+          {% else %}
+            <div class="kids-home__story-placeholder kids-home__story-placeholder--{{ forloop.index }}" aria-hidden="true"></div>
+          {% endif %}
+
+          <div class="kids-home__story-content">
+            <h2>{{ block.settings.heading }}</h2>
+            {% if block.settings.text != blank %}
+              <p>{{ block.settings.text }}</p>
+            {% endif %}
+            {% if block.settings.link_label != blank and block.settings.link != blank %}
+              <a href="{{ block.settings.link }}">{{ block.settings.link_label }} <span aria-hidden="true">↗</span></a>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if featured_collection != blank %}
+    <div class="kids-home__collection">
+      <div class="kids-home__collection-heading">
+        <div>
+          {% if section.settings.collection_eyebrow != blank %}
+            <p class="kids-home__eyebrow">{{ section.settings.collection_eyebrow }}</p>
+          {% endif %}
+          <h2>{{ section.settings.collection_heading }}</h2>
+        </div>
+        <a href="{{ featured_collection.url }}">{{ section.settings.collection_link_label }} <span aria-hidden="true">↗</span></a>
+      </div>
+
+      <div class="kids-home__products">
+        {% for product in featured_collection.products limit: product_limit %}
+          <article class="kids-home__product">
+            <a class="kids-home__product-media" href="{{ product.url }}">
+              {% if product.featured_image != blank %}
+                {{ product.featured_image | image_url: width: 900 | image_tag: widths: '320, 480, 640, 900', sizes: '(min-width: 990px) 25vw, 50vw' }}
+              {% endif %}
+            </a>
+            <div class="kids-home__product-meta">
+              <h3><a href="{{ product.url }}">{{ product.title }}</a></h3>
+              <p>{{ product.price | money }}</p>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</section>
+
+{% stylesheet %}
+  .kids-home {
+    --ink: #1d2538;
+    --paper: #fffaf2;
+    --peach: #ffc7a6;
+    --lilac: #d9d1ff;
+    --mint: #c9ebd7;
+    --sky: #bfe5f7;
+    padding: var(--section-top) 0 var(--section-bottom);
+    background: var(--paper);
+    color: var(--ink);
+    overflow: hidden;
+  }
+
+  .kids-home__hero,
+  .kids-home__stories,
+  .kids-home__collection {
+    width: min(100% - 2rem, 90rem);
+    margin: 0 auto;
+  }
+
+  .kids-home__hero {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    align-items: center;
+    gap: clamp(2rem, 6vw, 7rem);
+    min-height: 42rem;
+  }
+
+  .kids-home__hero-copy {
+    position: relative;
+    z-index: 1;
+    max-width: 38rem;
+    padding: 2rem 0;
+  }
+
+  .kids-home__eyebrow {
+    margin: 0 0 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .kids-home h1,
+  .kids-home h2,
+  .kids-home h3,
+  .kids-home p {
+    margin-top: 0;
+  }
+
+  .kids-home h1 {
+    max-width: 10ch;
+    margin-bottom: 1.5rem;
+    font-size: clamp(3.5rem, 7vw, 7.5rem);
+    line-height: 0.88;
+    letter-spacing: -0.07em;
+  }
+
+  .kids-home__intro {
+    max-width: 34rem;
+    margin-bottom: 2rem;
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    line-height: 1.55;
+  }
+
+  .kids-home__button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 3.25rem;
+    padding: 0.7rem 1.25rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 180ms ease, background 180ms ease;
+  }
+
+  .kids-home__button:hover {
+    background: #445073;
+    transform: translateY(-2px);
+  }
+
+  .kids-home__hero-art {
+    position: relative;
+    min-height: 34rem;
+  }
+
+  .kids-home__hero-image,
+  .kids-home__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 34rem;
+    border-radius: 48% 52% 43% 57% / 54% 43% 57% 46%;
+    object-fit: cover;
+  }
+
+  .kids-home__placeholder {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sky);
+  }
+
+  .kids-home__sun,
+  .kids-home__cloud,
+  .kids-home__hill {
+    position: absolute;
+    display: block;
+  }
+
+  .kids-home__sun {
+    top: 12%;
+    right: 16%;
+    width: 7rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #ffdf73;
+  }
+
+  .kids-home__cloud {
+    width: 9rem;
+    height: 2.8rem;
+    border-radius: 999px;
+    background: #fffaf2;
+  }
+
+  .kids-home__cloud::before,
+  .kids-home__cloud::after {
+    position: absolute;
+    bottom: 0;
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    background: inherit;
+    content: '';
+  }
+
+  .kids-home__cloud::before { left: 1rem; }
+  .kids-home__cloud::after { right: 0.6rem; width: 3.5rem; height: 3.5rem; }
+  .kids-home__cloud--one { top: 25%; left: 8%; transform: scale(0.7); }
+  .kids-home__cloud--two { top: 42%; right: 12%; transform: scale(0.5); }
+
+  .kids-home__hill {
+    bottom: -12%;
+    width: 90%;
+    height: 54%;
+    border-radius: 50% 50% 0 0;
+  }
+
+  .kids-home__hill--one { left: -25%; background: var(--mint); transform: rotate(8deg); }
+  .kids-home__hill--two { right: -30%; background: var(--lilac); transform: rotate(-9deg); }
+
+  .kids-home__caption {
+    position: absolute;
+    right: 0;
+    bottom: 1.5rem;
+    z-index: 2;
+    max-width: 14rem;
+    margin: 0;
+    padding: 0.8rem 1rem;
+    border-radius: 1rem;
+    background: rgba(255, 250, 242, 0.9);
+    font-size: 0.85rem;
+    line-height: 1.35;
+  }
+
+  .kids-home__stories {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 4rem;
+  }
+
+  .kids-home__story {
+    overflow: hidden;
+    border-radius: 1.5rem;
+    background: #fff;
+  }
+
+  .kids-home__story-image,
+  .kids-home__story-placeholder {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 0.8;
+    object-fit: cover;
+  }
+
+  .kids-home__story-placeholder--1 { background: var(--peach); }
+  .kids-home__story-placeholder--2 { background: var(--mint); }
+  .kids-home__story-placeholder--3 { background: var(--lilac); }
+  .kids-home__story-placeholder--4 { background: var(--sky); }
+  .kids-home__story-placeholder--5 { background: #ffe899; }
+  .kids-home__story-placeholder--6 { background: #f8c1d3; }
+
+  .kids-home__story-content { padding: 1.4rem; }
+  .kids-home__story h2 { margin-bottom: 0.6rem; font-size: clamp(1.5rem, 2vw, 2.3rem); line-height: 1; letter-spacing: -0.05em; }
+  .kids-home__story p { margin-bottom: 1rem; line-height: 1.5; }
+  .kids-home__story a,
+  .kids-home__collection-heading > a { color: inherit; font-weight: 700; text-underline-offset: 0.25em; }
+
+  .kids-home__collection { margin-top: clamp(5rem, 10vw, 9rem); }
+  .kids-home__collection-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; }
+  .kids-home__collection-heading h2 { margin-bottom: 0; font-size: clamp(2.4rem, 5vw, 5rem); line-height: 0.9; letter-spacing: -0.065em; }
+  .kids-home__collection-heading > a { padding-bottom: 0.4rem; white-space: nowrap; }
+  .kids-home__products { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  .kids-home__product-media { display: block; overflow: hidden; border-radius: 1rem; background: #f1eee9; aspect-ratio: 0.85; }
+  .kids-home__product-media img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 350ms ease; }
+  .kids-home__product:hover .kids-home__product-media img { transform: scale(1.04); }
+  .kids-home__product-meta { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-top: 0.9rem; }
+  .kids-home__product-meta h3 { margin-bottom: 0; font-size: 1rem; }
+  .kids-home__product-meta h3 a { color: inherit; text-decoration: none; }
+  .kids-home__product-meta p { margin-bottom: 0; white-space: nowrap; }
+
+  @media (max-width: 749px) {
+    .kids-home__hero { grid-template-columns: 1fr; min-height: 0; gap: 1rem; }
+    .kids-home__hero-copy { padding-top: 1rem; }
+    .kids-home h1 { max-width: 12ch; }
+    .kids-home__hero-art, .kids-home__hero-image, .kids-home__placeholder { min-height: 26rem; }
+    .kids-home__stories { grid-template-columns: 1fr; margin-top: 2rem; }
+    .kids-home__collection-heading { align-items: start; flex-direction: column; }
+    .kids-home__products { grid-template-columns: repeat(2, 1fr); }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Kids story home",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Made for little days" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Tiny things. Big adventures." },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Thoughtful essentials for curious kids and the grown-ups who love them.</p>" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop the collection" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "image_picker", "id": "hero_image", "label": "Hero image" },
+    { "type": "text", "id": "hero_caption", "label": "Hero caption", "default": "Playful pieces for everyday discoveries." },
+    { "type": "collection", "id": "featured_collection", "label": "Featured collection" },
+    { "type": "text", "id": "collection_eyebrow", "label": "Collection eyebrow", "default": "Just in" },
+    { "type": "text", "id": "collection_heading", "label": "Collection heading", "default": "For every little wonder" },
+    { "type": "text", "id": "collection_link_label", "label": "Collection link label", "default": "View all" },
+    { "type": "range", "id": "product_limit", "label": "Products to show", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 72 }
+  ],
+  "blocks": [
+    {
+      "type": "story",
+      "name": "Story card",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Made for messy magic" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Soft, sturdy, and ready for wherever the day goes." },
+        { "type": "text", "id": "link_label", "label": "Link label", "default": "Explore" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Kids story home",
+      "blocks": [
+        { "type": "story", "settings": { "heading": "Soft things, strong imaginations", "text": "Everyday pieces for playing, resting, and growing." } },
+        { "type": "story", "settings": { "heading": "Small rituals, happy days", "text": "Thoughtful essentials that turn routine into a little moment." } },
+        { "type": "story", "settings": { "heading": "A world of wonder", "text": "Bright finds made to follow their curiosity." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
