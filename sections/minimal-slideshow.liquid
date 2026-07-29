@@ -13,18 +13,22 @@
         <div class="minimal-slideshow__media">
           {% if block.settings.image != blank %}
             {{ block.settings.image | image_url: width: 2800 | image_tag: class: 'minimal-slideshow__image minimal-slideshow__image--desktop', widths: '750, 1100, 1500, 2000, 2800', sizes: '100vw', loading: 'eager' }}
+          {% elsif section.settings.desktop_image != blank %}
+            {{ section.settings.desktop_image | image_url: width: 2800 | image_tag: class: 'minimal-slideshow__image minimal-slideshow__image--desktop', widths: '750, 1100, 1500, 2000, 2800', sizes: '100vw', loading: 'eager' }}
           {% else %}
             <div class="minimal-slideshow__fallback minimal-slideshow__fallback--{{ forloop.index }}" aria-hidden="true"></div>
           {% endif %}
 
           {% if block.settings.mobile_image != blank %}
             {{ block.settings.mobile_image | image_url: width: 1400 | image_tag: class: 'minimal-slideshow__image minimal-slideshow__image--mobile', widths: '480, 750, 1000, 1400', sizes: '100vw', loading: 'eager' }}
+          {% elsif section.settings.mobile_image != blank %}
+            {{ section.settings.mobile_image | image_url: width: 1400 | image_tag: class: 'minimal-slideshow__image minimal-slideshow__image--mobile', widths: '480, 750, 1000, 1400', sizes: '100vw', loading: 'eager' }}
           {% endif %}
 
-          <span class="minimal-slideshow__veil" style="--veil: {{ block.settings.overlay_opacity | divided_by: 100.0 }}"></span>
+          <span class="minimal-slideshow__veil" style="--veil: {{ section.settings.overlay_opacity | divided_by: 100.0 }}"></span>
         </div>
 
-        <div class="minimal-slideshow__content minimal-slideshow__content--{{ block.settings.content_position }} color-{{ block.settings.content_color }}">
+        <div class="minimal-slideshow__content minimal-slideshow__content--{{ section.settings.content_position }} color-{{ block.settings.content_color }}">
           <div class="minimal-slideshow__copy">
             {% if block.settings.eyebrow != blank %}
               <p class="minimal-slideshow__eyebrow">{{ block.settings.eyebrow }}</p>
@@ -156,6 +160,11 @@
     { "type": "text", "id": "accessible_label", "label": "Accessible label", "default": "Featured stories" },
     { "type": "color", "id": "background_color", "label": "Background color", "default": "#c7c7c7" },
     { "type": "range", "id": "height", "label": "Desktop height", "min": 540, "max": 960, "step": 20, "unit": "px", "default": 700 },
+    { "type": "header", "content": "Slide appearance" },
+    { "type": "image_picker", "id": "desktop_image", "label": "Desktop image" },
+    { "type": "image_picker", "id": "mobile_image", "label": "Mobile image" },
+    { "type": "range", "id": "overlay_opacity", "label": "Image overlay opacity", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 15 },
+    { "type": "select", "id": "content_position", "label": "Content position", "options": [{ "value": "bottom-left", "label": "Bottom left" }, { "value": "bottom-center", "label": "Bottom center" }, { "value": "bottom-right", "label": "Bottom right" }, { "value": "middle-left", "label": "Middle left" }, { "value": "middle-center", "label": "Middle center" }, { "value": "middle-right", "label": "Middle right" }], "default": "bottom-left" },
     { "type": "header", "content": "Behavior" },
     { "type": "checkbox", "id": "autoplay", "label": "Auto-rotate slides", "default": true },
     { "type": "range", "id": "delay", "label": "Autoplay delay", "min": 3, "max": 10, "step": 1, "unit": "s", "default": 6 },
@@ -167,13 +176,11 @@
       "type": "slide",
       "name": "Slide",
       "settings": [
-        { "type": "header", "content": "Media" },
-        { "type": "image_picker", "id": "image", "label": "Desktop image" },
-        { "type": "image_picker", "id": "mobile_image", "label": "Mobile image" },
-        { "type": "range", "id": "overlay_opacity", "label": "Image overlay opacity", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 15 },
+        { "type": "header", "content": "Slide media overrides" },
+        { "type": "image_picker", "id": "image", "label": "Desktop image override" },
+        { "type": "image_picker", "id": "mobile_image", "label": "Mobile image override" },
         { "type": "header", "content": "Content" },
         { "type": "select", "id": "content_color", "label": "Content color", "options": [{ "value": "light", "label": "Light" }, { "value": "dark", "label": "Dark" }], "default": "light" },
-        { "type": "select", "id": "content_position", "label": "Content layout", "options": [{ "value": "bottom-left", "label": "Bottom left" }, { "value": "bottom-center", "label": "Bottom center" }, { "value": "bottom-right", "label": "Bottom right" }, { "value": "middle-left", "label": "Middle left" }, { "value": "middle-center", "label": "Middle center" }, { "value": "middle-right", "label": "Middle right" }], "default": "bottom-left" },
         { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Little moments" },
         { "type": "text", "id": "heading", "label": "Heading", "default": "Wrapped" },
         { "type": "text", "id": "heading_emphasis", "label": "Italic heading line", "default": "in warmth" },
@@ -187,8 +194,8 @@
       "name": "Minimal slideshow",
       "blocks": [
         { "type": "slide" },
-        { "type": "slide", "settings": { "eyebrow": "New little things", "heading": "Made for", "heading_emphasis": "everyday wonder", "button_label": "Explore now", "content_position": "bottom-center" } },
-        { "type": "slide", "settings": { "eyebrow": "Small stories", "heading": "Made to", "heading_emphasis": "move with them", "button_label": "See the edit", "content_position": "bottom-right" } }
+        { "type": "slide", "settings": { "eyebrow": "New little things", "heading": "Made for", "heading_emphasis": "everyday wonder", "button_label": "Explore now" } },
+        { "type": "slide", "settings": { "eyebrow": "Small stories", "heading": "Made to", "heading_emphasis": "move with them", "button_label": "See the edit" } }
       ]
     }
   ]

@@ -23,8 +23,7 @@
             "eyebrow": "New little things",
             "heading": "Made for",
             "heading_emphasis": "everyday wonder",
-            "button_label": "Explore now",
-            "content_position": "bottom-center"
+            "button_label": "Explore now"
           }
         },
         "slide_three": {
@@ -33,8 +32,7 @@
             "eyebrow": "Small stories",
             "heading": "Made to",
             "heading_emphasis": "move with them",
-            "button_label": "See the edit",
-            "content_position": "bottom-right"
+            "button_label": "See the edit"
           }
         }
       },
