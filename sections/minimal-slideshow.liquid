@@ -37,14 +37,25 @@
             <h2 class="minimal-slideshow__heading">
               {{ block.settings.heading }}
               {% if block.settings.heading_emphasis != blank %}
-                <em>{{ block.settings.heading_emphasis }}</em>
+                <span class="minimal-slideshow__heading-line">{{ block.settings.heading_emphasis }}</span>
               {% endif %}
             </h2>
 
-            {% if block.settings.button_label != blank and block.settings.button_link != blank %}
-              <a class="minimal-slideshow__button" href="{{ block.settings.button_link }}">
-                <span>{{ block.settings.button_label }}</span>
-                <span class="minimal-slideshow__button-icon" aria-hidden="true">→</span>
+            {% if block.settings.button_label != blank %}
+              {% assign button_href = block.settings.button_link | default: routes.all_products_collection_url %}
+              <a
+                class="minimal-slideshow__button minimal-slideshow__button--{{ block.settings.button_style }} minimal-slideshow__button--{{ block.settings.button_size }}{% if block.settings.button_icon_only %} minimal-slideshow__button--icon-only{% endif %}{% if block.settings.button_full_width_mobile %} minimal-slideshow__button--full-width-mobile{% endif %}"
+                href="{{ button_href }}"
+                {% if block.settings.button_icon_only %}aria-label="{{ block.settings.button_label | escape }}"{% endif %}
+                data-button-animation="{{ block.settings.button_animation }}"
+                style="--button-animation-delay: {{ block.settings.button_animation_delay }}ms;"
+              >
+                <span {% if block.settings.button_icon_only %}class="visually-hidden"{% endif %}>{{ block.settings.button_label }}</span>
+                {% if block.settings.button_icon != 'none' %}
+                  <span class="minimal-slideshow__button-icon minimal-slideshow__button-icon--{{ block.settings.button_icon_style }}" aria-hidden="true">
+                    {% if block.settings.button_icon == 'caret-right' %}›{% else %}→{% endif %}
+                  </span>
+                {% endif %}
               </a>
             {% endif %}
           </div>
@@ -87,11 +98,26 @@
   .minimal-slideshow__content--middle-right .minimal-slideshow__copy, .minimal-slideshow__content--bottom-right .minimal-slideshow__copy { display: flex; flex-direction: column; align-items: flex-end; }
   .minimal-slideshow__copy { max-width: 31rem; }
   .minimal-slideshow__eyebrow { margin: 0 0 1.8rem; font-family: var(--font-primary--family); font-size: 15px; font-weight: 700; letter-spacing: 0; line-height: 1.6; text-transform: uppercase; }
-  .minimal-slideshow__heading { margin: 0; font-family: var(--font-primary--family); font-size: clamp(3.5rem, 4.72vw, 4.25rem); font-weight: 700; line-height: 0.93; letter-spacing: -0.06em; }
-  .minimal-slideshow__heading em { display: block; font-family: inherit; font-style: italic; font-weight: 700; letter-spacing: -0.07em; }
-  .minimal-slideshow__button { position: relative; display: inline-flex; align-items: center; min-height: 50px; margin-top: 2.5rem; padding: 10px 48px 10px 24px; border: 0; border-radius: 999px; background: #fff; color: #000; font-family: var(--font-primary--family); font-size: 15px; font-weight: 700; line-height: 1; text-decoration: none; transition: transform 180ms ease; }
+  .minimal-slideshow__heading { margin: 0; font-family: var(--font-primary--family); font-size: clamp(3.8rem, calc(5.848vw - 0.685rem), 6.8rem); font-weight: 700; line-height: 0.93; letter-spacing: 0; }
+  .minimal-slideshow__heading-line { display: block; font-family: inherit; font-size: inherit; font-style: normal; font-weight: inherit; letter-spacing: inherit; }
+  .minimal-slideshow__button { position: relative; display: inline-flex; align-items: center; justify-content: center; min-height: 50px; margin-top: 2.5rem; padding: 10px 48px 10px 24px; border: 1px solid transparent; border-radius: 999px; background: #fff; color: #000; font-family: var(--font-primary--family); font-size: 15px; font-weight: 700; line-height: 1; text-decoration: none; transition: transform 180ms ease, background-color 180ms ease, color 180ms ease, border-color 180ms ease; }
   .minimal-slideshow__button:hover { transform: translateY(-2px); }
-  .minimal-slideshow__button-icon { position: absolute; right: 10px; display: grid; width: 30px; aspect-ratio: 1; place-items: center; border-radius: 50%; background: #696b6d; color: #fff; font-size: 1rem; }
+  .minimal-slideshow__button--secondary { border-color: currentColor; background: transparent; color: inherit; }
+  .minimal-slideshow__button--link { min-height: auto; padding: 0; border-radius: 0; background: transparent; color: inherit; text-decoration: underline; text-underline-offset: 0.25em; }
+  .minimal-slideshow__button--small { min-height: 42px; padding: 8px 42px 8px 20px; font-size: 14px; }
+  .minimal-slideshow__button--large { min-height: 56px; padding: 12px 54px 12px 26px; font-size: 16px; }
+  .minimal-slideshow__button--icon-only { width: 50px; padding: 0; }
+  .minimal-slideshow__button--icon-only.minimal-slideshow__button--small { width: 42px; }
+  .minimal-slideshow__button--icon-only.minimal-slideshow__button--large { width: 56px; }
+  .minimal-slideshow__button-icon { position: absolute; right: 10px; display: grid; width: 30px; aspect-ratio: 1; place-items: center; border-radius: 50%; color: currentColor; font-size: 1.4rem; line-height: 1; }
+  .minimal-slideshow__button--small .minimal-slideshow__button-icon { right: 7px; width: 28px; }
+  .minimal-slideshow__button--large .minimal-slideshow__button-icon { right: 12px; width: 32px; }
+  .minimal-slideshow__button--icon-only .minimal-slideshow__button-icon { position: static; }
+  .minimal-slideshow__button-icon--solid { background: #696b6d; color: #fff; }
+  .minimal-slideshow__button.is-button-animating[data-button-animation='fade-up'] { animation: minimal-slideshow-fade-up 550ms cubic-bezier(.22, .61, .36, 1) var(--button-animation-delay) both; }
+  .minimal-slideshow__button.is-button-animating[data-button-animation='fade-in'] { animation: minimal-slideshow-fade-in 450ms ease var(--button-animation-delay) both; }
+  @keyframes minimal-slideshow-fade-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes minimal-slideshow-fade-in { from { opacity: 0; } to { opacity: 1; } }
   .minimal-slideshow__navigation { position: absolute; right: clamp(1.5rem, 4vw, 5rem); bottom: clamp(2rem, 4vw, 4rem); z-index: 2; display: flex; align-items: center; gap: 1.1rem; color: #fff; }
   .minimal-slideshow__count { margin: 0; min-width: 2.4rem; font-size: 0.86rem; font-weight: 700; white-space: nowrap; }
   .minimal-slideshow__progress { width: clamp(5rem, 10vw, 8rem); height: 1px; background: rgba(255, 255, 255, 0.55); }
@@ -106,7 +132,8 @@
     .minimal-slideshow__content { width: min(100% - 2.5rem, 100rem); padding-bottom: 7.5rem; }
     .minimal-slideshow__content--middle-right, .minimal-slideshow__content--bottom-right { justify-content: flex-start; text-align: left; }
     .minimal-slideshow__content--middle-right .minimal-slideshow__copy, .minimal-slideshow__content--bottom-right .minimal-slideshow__copy { align-items: flex-start; }
-    .minimal-slideshow__heading { font-size: clamp(3.5rem, 16vw, 4.25rem); }
+    .minimal-slideshow__heading { font-size: clamp(3.8rem, 16vw, 4.25rem); }
+    .minimal-slideshow__button--full-width-mobile { display: flex; width: 100%; }
     .minimal-slideshow__navigation { right: 1.25rem; bottom: 1.75rem; gap: 0.75rem; }
   }
 {% endstylesheet %}
@@ -129,6 +156,12 @@
         if (progress) progress.style.width = `${((swiper.realIndex + 1) / swiper.slides.length) * 100}%`
       }
 
+      const animateActiveButton = (swiper) => {
+        section.querySelectorAll('[data-button-animation]').forEach((button) => button.classList.remove('is-button-animating'))
+        const activeButton = swiper.slides[swiper.activeIndex]?.querySelector('[data-button-animation]:not([data-button-animation="none"])')
+        if (activeButton) requestAnimationFrame(() => activeButton.classList.add('is-button-animating'))
+      }
+
       const swiper = new Swiper(element, {
         a11y: { enabled: true },
         autoplay: autoplayEnabled ? { delay: Number(section.dataset.delay), disableOnInteraction: false, pauseOnMouseEnter: true } : false,
@@ -137,7 +170,14 @@
         keyboard: { enabled: true },
         navigation: navigationEnabled ? { nextEl: next, prevEl: previous } : false,
         speed: 650,
-        on: { init: updateControls, slideChange: updateControls }
+        on: {
+          init: (instance) => {
+            updateControls(instance)
+            animateActiveButton(instance)
+          },
+          slideChange: updateControls,
+          slideChangeTransitionStart: animateActiveButton
+        }
       })
 
       element.dataset.initialized = 'true'
@@ -183,9 +223,20 @@
         { "type": "select", "id": "content_color", "label": "Content color", "options": [{ "value": "light", "label": "Light" }, { "value": "dark", "label": "Dark" }], "default": "light" },
         { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Little moments" },
         { "type": "text", "id": "heading", "label": "Heading", "default": "Wrapped" },
-        { "type": "text", "id": "heading_emphasis", "label": "Italic heading line", "default": "in warmth" },
+        { "type": "text", "id": "heading_emphasis", "label": "Second heading line", "default": "in warmth" },
+        { "type": "header", "content": "Button" },
         { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop collection" },
-        { "type": "url", "id": "button_link", "label": "Button link" }
+        { "type": "url", "id": "button_link", "label": "Button link" },
+        { "type": "select", "id": "button_style", "label": "Style", "options": [{ "value": "primary", "label": "Primary" }, { "value": "secondary", "label": "Secondary" }, { "value": "link", "label": "Text link" }], "default": "primary" },
+        { "type": "select", "id": "button_size", "label": "Size", "options": [{ "value": "small", "label": "Small" }, { "value": "medium", "label": "Medium" }, { "value": "large", "label": "Large" }], "default": "large" },
+        { "type": "select", "id": "button_icon", "label": "Icon", "options": [{ "value": "none", "label": "None" }, { "value": "caret-right", "label": "Caret right" }, { "value": "arrow-right", "label": "Arrow right" }], "default": "caret-right" },
+        { "type": "checkbox", "id": "button_icon_only", "label": "Icon only", "default": false },
+        { "type": "select", "id": "button_icon_style", "label": "Icon style", "options": [{ "value": "default", "label": "Default" }, { "value": "solid", "label": "Solid" }], "default": "solid" },
+        { "type": "header", "content": "Mobile settings" },
+        { "type": "checkbox", "id": "button_full_width_mobile", "label": "Enable full width on mobile", "default": false },
+        { "type": "header", "content": "Animation" },
+        { "type": "select", "id": "button_animation", "label": "Type", "options": [{ "value": "none", "label": "None" }, { "value": "fade-up", "label": "Fade up" }, { "value": "fade-in", "label": "Fade in" }], "default": "fade-up" },
+        { "type": "range", "id": "button_animation_delay", "label": "Delay", "min": 0, "max": 1000, "step": 50, "unit": "ms", "default": 250 }
       ]
     }
   ],
