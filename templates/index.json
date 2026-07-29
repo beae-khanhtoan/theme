@@ -20,14 +20,25 @@
         "slide_two": {
           "type": "slide",
           "settings": {
-            "eyebrow": "Made to move",
-            "heading": "The joy is in the everyday",
-            "text": "<p>Thoughtful essentials designed to grow alongside them.</p>",
-            "text_alignment": "center"
+            "eyebrow": "New little things",
+            "heading": "Made for",
+            "heading_emphasis": "everyday wonder",
+            "button_label": "Explore now",
+            "content_position": "bottom-center"
+          }
+        },
+        "slide_three": {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "Small stories",
+            "heading": "Made to",
+            "heading_emphasis": "move with them",
+            "button_label": "See the edit",
+            "content_position": "bottom-right"
           }
         }
       },
-      "block_order": ["slide_one", "slide_two"]
+      "block_order": ["slide_one", "slide_two", "slide_three"]
     },
     "main": {
       "type": "kids-story-home",

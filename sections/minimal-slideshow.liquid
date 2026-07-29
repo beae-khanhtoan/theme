@@ -1,13 +1,15 @@
-<minimal-slideshow
+<section
   id="MinimalSlideshow-{{ section.id }}"
   class="minimal-slideshow"
   style="--slide-height: {{ section.settings.height }}px; --section-background: {{ section.settings.background_color }};"
   data-autoplay="{{ section.settings.autoplay }}"
-  data-speed="{{ section.settings.speed | times: 1000 }}"
+  data-delay="{{ section.settings.delay | times: 1000 }}"
+  data-navigation="{{ section.settings.show_navigation }}"
 >
-  <div class="minimal-slideshow__viewport" role="region" aria-roledescription="carousel" aria-label="{{ section.settings.accessible_label }}">
-    {% for block in section.blocks %}
-      <article class="minimal-slideshow__slide{% if forloop.first %} is-active{% endif %}" data-slide aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}" {{ block.shopify_attributes }}>
+  <div class="swiper minimal-slideshow__swiper" data-minimal-swiper role="region" aria-roledescription="carousel" aria-label="{{ section.settings.accessible_label }}">
+    <div class="swiper-wrapper">
+      {% for block in section.blocks %}
+        <article class="swiper-slide minimal-slideshow__slide" {{ block.shopify_attributes }}>
         <div class="minimal-slideshow__media">
           {% if block.settings.image != blank %}
             {{ block.settings.image | image_url: width: 2800 | image_tag: class: 'minimal-slideshow__image minimal-slideshow__image--desktop', widths: '750, 1100, 1500, 2000, 2800', sizes: '100vw', loading: 'eager' }}
@@ -22,7 +24,7 @@
           <span class="minimal-slideshow__veil" style="--veil: {{ block.settings.overlay_opacity | divided_by: 100.0 }}"></span>
         </div>
 
-        <div class="minimal-slideshow__content color-{{ block.settings.content_color }}">
+        <div class="minimal-slideshow__content minimal-slideshow__content--{{ block.settings.content_position }} color-{{ block.settings.content_color }}">
           <div class="minimal-slideshow__copy">
             {% if block.settings.eyebrow != blank %}
               <p class="minimal-slideshow__eyebrow">{{ block.settings.eyebrow }}</p>
@@ -43,10 +45,11 @@
             {% endif %}
           </div>
         </div>
-      </article>
-    {% endfor %}
+        </article>
+      {% endfor %}
+    </div>
 
-    {% if section.blocks.size > 1 %}
+    {% if section.blocks.size > 1 and section.settings.show_navigation %}
       <div class="minimal-slideshow__navigation">
         <p class="minimal-slideshow__count"><span data-current>1</span> / <span>{{ section.blocks.size }}</span></p>
         <div class="minimal-slideshow__progress" aria-hidden="true"><span data-progress></span></div>
@@ -55,13 +58,12 @@
       </div>
     {% endif %}
   </div>
-</minimal-slideshow>
+</section>
 
 {% stylesheet %}
   .minimal-slideshow { display: block; background: var(--section-background); }
-  .minimal-slideshow__viewport { position: relative; min-height: var(--slide-height); overflow: hidden; }
-  .minimal-slideshow__slide { position: absolute; inset: 0; min-height: var(--slide-height); opacity: 0; pointer-events: none; transition: opacity 650ms ease; }
-  .minimal-slideshow__slide.is-active { position: relative; opacity: 1; pointer-events: auto; }
+  .minimal-slideshow__swiper { position: relative; min-height: var(--slide-height); overflow: hidden; }
+  .minimal-slideshow__slide { position: relative; min-height: var(--slide-height); }
   .minimal-slideshow__media, .minimal-slideshow__image, .minimal-slideshow__fallback, .minimal-slideshow__veil { position: absolute; inset: 0; width: 100%; height: 100%; }
   .minimal-slideshow__image { display: block; object-fit: cover; }
   .minimal-slideshow__image--mobile { display: none; }
@@ -71,13 +73,21 @@
   .minimal-slideshow__fallback--3 { background: linear-gradient(135deg, #d4c0ae 0%, #c4a997 48%, #cfc6b7 100%); }
   .minimal-slideshow__veil { background: #111; opacity: var(--veil); }
   .minimal-slideshow__content { position: absolute; inset: 0; z-index: 1; display: flex; align-items: flex-end; width: min(100% - 7.5rem, 100rem); margin: 0 auto; padding: clamp(3.5rem, 7vw, 7.5rem) 0; }
+  .minimal-slideshow__content--bottom-left { justify-content: flex-start; align-items: flex-end; text-align: left; }
+  .minimal-slideshow__content--bottom-center { justify-content: center; align-items: flex-end; text-align: center; }
+  .minimal-slideshow__content--middle-left { justify-content: flex-start; align-items: center; text-align: left; }
+  .minimal-slideshow__content--middle-center { justify-content: center; align-items: center; text-align: center; }
+  .minimal-slideshow__content--middle-right { justify-content: flex-end; align-items: center; text-align: right; }
+  .minimal-slideshow__content--bottom-right { justify-content: flex-end; align-items: flex-end; text-align: right; }
+  .minimal-slideshow__content--bottom-center .minimal-slideshow__copy, .minimal-slideshow__content--middle-center .minimal-slideshow__copy { display: flex; flex-direction: column; align-items: center; }
+  .minimal-slideshow__content--middle-right .minimal-slideshow__copy, .minimal-slideshow__content--bottom-right .minimal-slideshow__copy { display: flex; flex-direction: column; align-items: flex-end; }
   .minimal-slideshow__copy { max-width: 31rem; }
-  .minimal-slideshow__eyebrow { margin: 0 0 1.8rem; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
-  .minimal-slideshow__heading { margin: 0; font-family: var(--font-heading-family, inherit); font-size: clamp(4rem, 7.6vw, 8.6rem); font-weight: 600; line-height: 0.88; letter-spacing: -0.085em; }
-  .minimal-slideshow__heading em { display: block; font-family: Georgia, 'Times New Roman', serif; font-weight: 400; letter-spacing: -0.09em; }
-  .minimal-slideshow__button { display: inline-flex; align-items: center; gap: 0.75rem; min-height: 3.25rem; margin-top: 2.5rem; padding: 0.35rem 0.35rem 0.35rem 1.35rem; border-radius: 999px; background: #fff; color: #5f6060; font-size: 0.9rem; font-weight: 700; text-decoration: none; transition: transform 180ms ease; }
+  .minimal-slideshow__eyebrow { margin: 0 0 1.8rem; font-family: var(--font-primary--family); font-size: 15px; font-weight: 700; letter-spacing: 0; line-height: 1.6; text-transform: uppercase; }
+  .minimal-slideshow__heading { margin: 0; font-family: var(--font-primary--family); font-size: clamp(3.5rem, 4.72vw, 4.25rem); font-weight: 700; line-height: 0.93; letter-spacing: -0.06em; }
+  .minimal-slideshow__heading em { display: block; font-family: inherit; font-style: italic; font-weight: 700; letter-spacing: -0.07em; }
+  .minimal-slideshow__button { position: relative; display: inline-flex; align-items: center; min-height: 50px; margin-top: 2.5rem; padding: 10px 48px 10px 24px; border: 0; border-radius: 999px; background: #fff; color: #000; font-family: var(--font-primary--family); font-size: 15px; font-weight: 700; line-height: 1; text-decoration: none; transition: transform 180ms ease; }
   .minimal-slideshow__button:hover { transform: translateY(-2px); }
-  .minimal-slideshow__button-icon { display: grid; width: 2.55rem; aspect-ratio: 1; place-items: center; border-radius: 50%; background: #696b6d; color: #fff; font-size: 1.1rem; }
+  .minimal-slideshow__button-icon { position: absolute; right: 10px; display: grid; width: 30px; aspect-ratio: 1; place-items: center; border-radius: 50%; background: #696b6d; color: #fff; font-size: 1rem; }
   .minimal-slideshow__navigation { position: absolute; right: clamp(1.5rem, 4vw, 5rem); bottom: clamp(2rem, 4vw, 4rem); z-index: 2; display: flex; align-items: center; gap: 1.1rem; color: #fff; }
   .minimal-slideshow__count { margin: 0; min-width: 2.4rem; font-size: 0.86rem; font-weight: 700; white-space: nowrap; }
   .minimal-slideshow__progress { width: clamp(5rem, 10vw, 8rem); height: 1px; background: rgba(255, 255, 255, 0.55); }
@@ -86,75 +96,84 @@
   .minimal-slideshow .color-light { color: #fff; }
   .minimal-slideshow .color-dark { color: #1b1b1b; }
   @media (max-width: 749px) {
-    .minimal-slideshow__viewport, .minimal-slideshow__slide { min-height: max(38rem, var(--slide-height)); }
+    .minimal-slideshow__swiper, .minimal-slideshow__slide { min-height: max(38rem, var(--slide-height)); }
     .minimal-slideshow__image--desktop { display: none; }
     .minimal-slideshow__image--mobile { display: block; }
     .minimal-slideshow__content { width: min(100% - 2.5rem, 100rem); padding-bottom: 7.5rem; }
-    .minimal-slideshow__heading { font-size: clamp(3.5rem, 17vw, 5.4rem); }
+    .minimal-slideshow__content--middle-right, .minimal-slideshow__content--bottom-right { justify-content: flex-start; text-align: left; }
+    .minimal-slideshow__content--middle-right .minimal-slideshow__copy, .minimal-slideshow__content--bottom-right .minimal-slideshow__copy { align-items: flex-start; }
+    .minimal-slideshow__heading { font-size: clamp(3.5rem, 16vw, 4.25rem); }
     .minimal-slideshow__navigation { right: 1.25rem; bottom: 1.75rem; gap: 0.75rem; }
   }
-  @media (prefers-reduced-motion: reduce) { .minimal-slideshow__slide { transition: none; } }
 {% endstylesheet %}
 
 {% javascript %}
-  class MinimalSlideshow extends HTMLElement {
-    connectedCallback() {
-      this.slides = Array.from(this.querySelectorAll('[data-slide]'))
-      this.current = this.querySelector('[data-current]')
-      this.progress = this.querySelector('[data-progress]')
-      this.index = 0
-      this.timer = null
-      this.querySelector('[data-next]')?.addEventListener('click', () => this.show(this.index + 1))
-      this.querySelector('[data-previous]')?.addEventListener('click', () => this.show(this.index - 1))
-      this.addEventListener('mouseenter', () => this.stop())
-      this.addEventListener('mouseleave', () => this.start())
-      this.start()
-    }
+  const initializeMinimalSlideshows = () => {
+    document.querySelectorAll('[data-minimal-swiper]').forEach((element) => {
+      if (element.dataset.initialized === 'true' || typeof Swiper === 'undefined') return
 
-    disconnectedCallback() { this.stop() }
+      const section = element.closest('.minimal-slideshow')
+      const current = section.querySelector('[data-current]')
+      const progress = section.querySelector('[data-progress]')
+      const previous = section.querySelector('[data-previous]')
+      const next = section.querySelector('[data-next]')
+      const autoplayEnabled = section.dataset.autoplay === 'true' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      const navigationEnabled = section.dataset.navigation === 'true'
 
-    show(nextIndex) {
-      this.index = (nextIndex + this.slides.length) % this.slides.length
-      this.slides.forEach((slide, slideIndex) => {
-        const active = slideIndex === this.index
-        slide.classList.toggle('is-active', active)
-        slide.setAttribute('aria-hidden', String(!active))
+      const updateControls = (swiper) => {
+        if (current) current.textContent = String(swiper.realIndex + 1)
+        if (progress) progress.style.width = `${((swiper.realIndex + 1) / swiper.slides.length) * 100}%`
+      }
+
+      const swiper = new Swiper(element, {
+        a11y: { enabled: true },
+        autoplay: autoplayEnabled ? { delay: Number(section.dataset.delay), disableOnInteraction: false, pauseOnMouseEnter: true } : false,
+        effect: 'fade',
+        fadeEffect: { crossFade: true },
+        keyboard: { enabled: true },
+        navigation: navigationEnabled ? { nextEl: next, prevEl: previous } : false,
+        speed: 650,
+        on: { init: updateControls, slideChange: updateControls }
       })
-      if (this.current) this.current.textContent = String(this.index + 1)
-      if (this.progress) this.progress.style.width = `${((this.index + 1) / this.slides.length) * 100}%`
-    }
 
-    start() {
-      if (this.dataset.autoplay !== 'true' || this.slides.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-      this.stop()
-      this.timer = window.setInterval(() => this.show(this.index + 1), Number(this.dataset.speed))
-    }
-
-    stop() { if (this.timer) window.clearInterval(this.timer) }
+      element.dataset.initialized = 'true'
+      updateControls(swiper)
+    })
   }
 
-  if (!customElements.get('minimal-slideshow')) customElements.define('minimal-slideshow', MinimalSlideshow)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeMinimalSlideshows)
+  } else {
+    initializeMinimalSlideshows()
+  }
 {% endjavascript %}
 
 {% schema %}
 {
   "name": "Minimal slideshow",
   "settings": [
+    { "type": "header", "content": "Slideshow" },
     { "type": "text", "id": "accessible_label", "label": "Accessible label", "default": "Featured stories" },
     { "type": "color", "id": "background_color", "label": "Background color", "default": "#c7c7c7" },
     { "type": "range", "id": "height", "label": "Desktop height", "min": 540, "max": 960, "step": 20, "unit": "px", "default": 700 },
+    { "type": "header", "content": "Behavior" },
     { "type": "checkbox", "id": "autoplay", "label": "Auto-rotate slides", "default": true },
-    { "type": "range", "id": "speed", "label": "Slide duration", "min": 3, "max": 10, "step": 1, "unit": "s", "default": 6 }
+    { "type": "range", "id": "delay", "label": "Autoplay delay", "min": 3, "max": 10, "step": 1, "unit": "s", "default": 6 },
+    { "type": "checkbox", "id": "show_navigation", "label": "Show navigation", "default": true }
   ],
+  "max_blocks": 8,
   "blocks": [
     {
       "type": "slide",
       "name": "Slide",
       "settings": [
+        { "type": "header", "content": "Media" },
         { "type": "image_picker", "id": "image", "label": "Desktop image" },
         { "type": "image_picker", "id": "mobile_image", "label": "Mobile image" },
         { "type": "range", "id": "overlay_opacity", "label": "Image overlay opacity", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 15 },
+        { "type": "header", "content": "Content" },
         { "type": "select", "id": "content_color", "label": "Content color", "options": [{ "value": "light", "label": "Light" }, { "value": "dark", "label": "Dark" }], "default": "light" },
+        { "type": "select", "id": "content_position", "label": "Content layout", "options": [{ "value": "bottom-left", "label": "Bottom left" }, { "value": "bottom-center", "label": "Bottom center" }, { "value": "bottom-right", "label": "Bottom right" }, { "value": "middle-left", "label": "Middle left" }, { "value": "middle-center", "label": "Middle center" }, { "value": "middle-right", "label": "Middle right" }], "default": "bottom-left" },
         { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Little moments" },
         { "type": "text", "id": "heading", "label": "Heading", "default": "Wrapped" },
         { "type": "text", "id": "heading_emphasis", "label": "Italic heading line", "default": "in warmth" },
@@ -168,7 +187,8 @@
       "name": "Minimal slideshow",
       "blocks": [
         { "type": "slide" },
-        { "type": "slide", "settings": { "eyebrow": "New little things", "heading": "Made for", "heading_emphasis": "everyday wonder", "button_label": "Explore now" } }
+        { "type": "slide", "settings": { "eyebrow": "New little things", "heading": "Made for", "heading_emphasis": "everyday wonder", "button_label": "Explore now", "content_position": "bottom-center" } },
+        { "type": "slide", "settings": { "eyebrow": "Small stories", "heading": "Made to", "heading_emphasis": "move with them", "button_label": "See the edit", "content_position": "bottom-right" } }
       ]
     }
   ]
