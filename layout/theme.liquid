@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="{{ request.locale.iso_code }}">
   <head>
- {%- render 'layouthub_header' -%}
     {% # Inlined CSS Variables %}
     {% render 'css-variables' %}
 
@@ -36,6 +35,5 @@
     <!--LayoutHub-Workspace-Start-->{{ content_for_layout }}<!--LayoutHub-Workspace-End-->
 
     {% sections 'footer-group' %}
-  {%- render 'layouthub_footer' -%} 
  </body>
 </html>

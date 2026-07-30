@@ -15,15 +15,20 @@
       "blocks": {
         "slide_one": {
           "type": "slide",
-          "settings": {}
+          "settings": {
+            "eyebrow": "NEW CAMPAIGN",
+            "heading": "Softness",
+            "heading_emphasis": "in Comfort",
+            "button_label": "Shop Collection"
+          }
         },
         "slide_two": {
           "type": "slide",
           "settings": {
-            "eyebrow": "New little things",
-            "heading": "Made for",
-            "heading_emphasis": "everyday wonder",
-            "button_label": "Explore now"
+            "eyebrow": "LITTLE MOMENTS",
+            "heading": "Wrapped",
+            "heading_emphasis": "in Warmth",
+            "button_label": "Shop Collection"
           }
         },
         "slide_three": {
