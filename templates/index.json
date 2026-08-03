@@ -11,41 +11,100 @@
   "sections": {
     "minimal_slideshow": {
       "type": "minimal-slideshow",
-      "settings": {},
       "blocks": {
         "slide_one": {
           "type": "slide",
           "settings": {
+            "content_color": "light",
             "eyebrow": "NEW CAMPAIGN",
             "heading": "Softness",
             "heading_emphasis": "in Comfort",
-            "button_label": "Shop Collection"
+            "button_label": "Shop Collection",
+            "button_link": "",
+            "button_style": "primary",
+            "button_size": "large",
+            "button_icon": "caret-right",
+            "button_icon_only": false,
+            "button_icon_style": "solid",
+            "button_full_width_mobile": false,
+            "button_animation": "fade-up",
+            "button_animation_delay": 250
           }
         },
         "slide_two": {
           "type": "slide",
           "settings": {
+            "content_color": "light",
             "eyebrow": "LITTLE MOMENTS",
             "heading": "Wrapped",
             "heading_emphasis": "in Warmth",
-            "button_label": "Shop Collection"
+            "button_label": "Shop Collection",
+            "button_link": "",
+            "button_style": "primary",
+            "button_size": "large",
+            "button_icon": "caret-right",
+            "button_icon_only": false,
+            "button_icon_style": "solid",
+            "button_full_width_mobile": false,
+            "button_animation": "fade-up",
+            "button_animation_delay": 250
           }
         },
         "slide_three": {
           "type": "slide",
           "settings": {
+            "image": "shopify://shop_images/slide-1-v2.webp",
+            "mobile_image": "shopify://shop_images/slide-2-v2.webp",
+            "content_color": "light",
             "eyebrow": "Small stories",
             "heading": "Made to",
             "heading_emphasis": "move with them",
-            "button_label": "See the edit"
+            "button_label": "See the edit",
+            "button_link": "",
+            "button_style": "primary",
+            "button_size": "large",
+            "button_icon": "caret-right",
+            "button_icon_only": false,
+            "button_icon_style": "solid",
+            "button_full_width_mobile": false,
+            "button_animation": "fade-up",
+            "button_animation_delay": 250
           }
         }
       },
-      "block_order": ["slide_one", "slide_two", "slide_three"]
+      "block_order": [
+        "slide_one",
+        "slide_two",
+        "slide_three"
+      ],
+      "settings": {
+        "accessible_label": "Featured stories",
+        "background_color": "#c7c7c7",
+        "height": 700,
+        "overlay_opacity": 15,
+        "content_position": "bottom-left",
+        "autoplay": true,
+        "delay": 6,
+        "show_navigation": true
+      }
     },
     "main": {
       "type": "kids-story-home",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Made for little days",
+        "heading": "Tiny things. Big adventures.",
+        "text": "<p>Thoughtful essentials for curious kids and the grown-ups who love them.</p>",
+        "button_label": "Shop the collection",
+        "button_link": "",
+        "hero_caption": "Playful pieces for everyday discoveries.",
+        "featured_collection": "",
+        "collection_eyebrow": "Just in",
+        "collection_heading": "For every little wonder",
+        "collection_link_label": "View all",
+        "product_limit": 4,
+        "padding_top": 40,
+        "padding_bottom": 72
+      }
     }
   },
   "order": [
